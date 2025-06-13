@@ -36,9 +36,9 @@ typedef enum _AudioExt
 
 typedef enum _VideoExt
 {
-    MP4,
-    MOV,
-    INVALID
+    V_MP4,
+    V_MOV,
+    V_INVALID
 }VideoExt;
 
 typedef enum _ThumbnailExt
@@ -413,7 +413,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         return ERROR_INVALID_INPUT_EXTENSION;
     }
     output_extension = get_audio_extension((const gchar *)output_file);
-    if(output_extension != MOV)
+    if(output_extension != V_MOV)
     {
         return ERROR_INVALID_OUTPUT_EXTENSION;
     }
@@ -502,7 +502,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     
     gst_object_unref (queue_audio_pad);
     gst_object_unref (queue_video_pad);
-    if(!gst_element_link(nightcore_pipeline.muxer_mp4, nightcore_pipeline.image_convert ,nightcore_pipeline.file_sink))
+    if(!gst_element_link_many(nightcore_pipeline.muxer_mp4, nightcore_pipeline.image_convert ,nightcore_pipeline.file_sink))
     {
         DEBUG_PRINT(g_printerr("Cannot link muxer mp4 to file sink"))
         return ERROR_CANT_LINK_ALL_ELEMENTS;

@@ -1,11 +1,17 @@
 #include "analyse.h"
 #include <string.h>
 
+
 #define DEFAULT_BPM -1.0
+
+static void merge(float array[], int left, int mid, int right);
+
+static void merge_sort(float array[], int left, int right);
+
 
 
 static float calculate_medium(float array[], int num){
-    float medium = 0.0
+    float medium = 0.0;
     for(int i = 0; i<num;i++)
     {
         medium += array[i];
@@ -13,7 +19,7 @@ static float calculate_medium(float array[], int num){
     return medium;
 }
 
-static float calculate_max(arrayt num)
+static float calculate_max(float array[], int num)
 {
     float min_candidate;
     if(num <= 0)
@@ -56,7 +62,7 @@ static float calculate_mediana(float array[], int num, int already_sorted){
     }
     if(num == 0)
     {
-        return -1.0
+        return -1.0;
     }
     if(num == 1)
     {
@@ -126,13 +132,13 @@ static void merge_sort(float array[], int left, int right)
         merge_sort(array, left, mid);
         merge_sort(array, mid + 1, right);
 
-        merge(array, left, mid, right)
+        merge(array, left, mid, right);
     }
 }
 
-static uint32_t pitch_cerpstrum();
+static u_int32_t pitch_cerpstrum();
 
-static uint32_t pitch_autocorelation(PitchData *pitch_data);
+static u_int32_t pitch_autocorelation(PitchData *pitch_data);
 
 int analyse_init_bpm_data(BPMData *bpm_data, BPMDataAlgo bpm_algo)
 {
@@ -148,5 +154,5 @@ int analyse_init_bpm_data(BPMData *bpm_data, BPMDataAlgo bpm_algo)
 float analyse_get_song_bpm(gchar * song_path)
 {
     
-    return -1.0
+    return -1.0;
 }

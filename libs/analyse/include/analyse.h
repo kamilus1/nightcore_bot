@@ -2,6 +2,7 @@
 #define _ANALYSE_H_
 
 #include <gst/gst.h>
+#include <glib-2.0/glib.h>
 
 #define PROB_NUM 100
 
@@ -43,7 +44,7 @@ typedef struct _PitchData
     GstElement   *audio_convert;
     GstElement   *fft_spectrum;
     GstElement   *fakesink;
-    guint32_t     audio_frequency;
+    u_int32_t     audio_frequency;
 }PitchData;
 
 typedef struct _FrequencyVolData
@@ -52,15 +53,15 @@ typedef struct _FrequencyVolData
     GstElement *audio_source;
     GstElement *audio_convert;
     GstElement *audiosink;
-    guint32_t low_freq_start;
-    guint32_t medium_freq_start;
-    guint32_t high_freq_start;
-    guint32_t audio_frequency;
+    u_int32_t low_freq_start;
+    u_int32_t medium_freq_start;
+    u_int32_t high_freq_start;
+    u_int32_t audio_frequency;
 }FrequencyVolData;
 
 int analyse_init_bpm_data(BPMData *bpm_data, BPMDataAlgo bpm_algo);
 
-int analyse_init_pitch_data(PitchData, )
+int analyse_init_pitch_data(PitchData *pitch_data);
 
 float analyse_get_song_bpm(gchar * song_path);
 
