@@ -57,4 +57,8 @@ AudioExt utils_get_audio_extension(const char *file_name);
 VideoExt utils_get_video_extension(const char *file_name);
 
 ThumbnailExt utils_get_thumbnail_extension(const char *file_name);
+
+InputExt utils_get_input_extension(const char *file_name);
+
+
 #endif
