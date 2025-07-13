@@ -1,0 +1,1 @@
+./builddir/nightcorek -i 'Wenext - Tenten ft. Młody West, wane, Okekel (Official Music Video) [OF9MeyErYyM].mp4' -p 1.2 -s 1.15 -b 5 -d 20 -r 0.05 -f 0.05 -o tenten.wav

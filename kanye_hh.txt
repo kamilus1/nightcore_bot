@@ -1,0 +1,1 @@
+/builddir/nightcorek -i "YE - HH (TOP 5 VERSION XTENDED) [2092262562].m4a" -p 1.1 -s 1.08 -b 2.2.2 -d 40 -f  0.086 -r 0.085 -o ye_hh.wav

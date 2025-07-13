@@ -1,0 +1,2 @@
+./builddir/nightcorek -i 'Mechatok, Ecco2k & Bladee - Expression On Your Face [Lyrics ⧸ AMV] [MZ7smaTJSaA].mp4' -p 1.18 -s 1.23 -b 4.44 -d 40 -r 0.09 -f 0.08 -o expression.wav
+

@@ -1,0 +1,1 @@
+/builddir/nightcorek -i 'da vinci [B2nVozm_C1Y].mp4' -p 1.09 -s 1.085 -b 2.5 -d 40 -r 0.09 -f 0.09 -o schafter_davinci_nightcore.wav~

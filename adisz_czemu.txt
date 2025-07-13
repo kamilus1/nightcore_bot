@@ -1,0 +1,1 @@
+-i Yung Adisz - ＂Czemu Kocham Złą Laskę＂ (Music Video) Feat. Partycja [B9vnPVPNWbg].mp4 -b 2.7 -s 1.225 -p 1.21 -d 50 -r 0.1 -f 0.09 -o czemu_kochalem.wav
