@@ -6,6 +6,7 @@
 #define MS_TO_NS 1000000
 #define AUDIO_EXTENSIONS_NUM 6
 #define THUMBNAIL_EXTENSIONS_NUM 3
+#define VIDEO_EXTENSIONS_NUM 2
 #define REVERB_DELAY_MAX_MS 500
 //aac
 static const char * audio_files_ext[] = {"mp3", "flac", "wav", "mp4", "mov", "webm"};
@@ -112,6 +113,8 @@ typedef struct _NightcoreVideoSpeedUpPipeline
 
     GstElement *file_sink;
 }NightcoreVideoSpeedUpPipeline;
+
+
 static AudioExt get_audio_extension(const gchar *file_name);
 
 static VideoExt get_video_extension(const gchar *file_name);
@@ -412,7 +415,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     {
         return ERROR_INVALID_INPUT_EXTENSION;
     }
-    output_extension = get_audio_extension((const gchar *)output_file);
+    output_extension = get_video_extension((const gchar *)output_file);
     if(output_extension != V_MOV)
     {
         return ERROR_INVALID_OUTPUT_EXTENSION;
@@ -668,6 +671,28 @@ static AudioExt get_audio_extension(const gchar *file_name)
         if(strcmp(extenison_result, audio_files_ext[i]) == 0)
         {
             result = (AudioExt)i;
+        }
+    }
+    g_free(file_name_copy);
+    return result;
+}
+
+static VideoExt get_video_extension(const gchar *file_name)
+{
+    gchar *file_name_copy = g_strdup(file_name);
+    gchar *token = (gchar *)strtok((char *)file_name_copy, ".");
+    gchar *extension_result;
+    while(token)
+    {
+        extension_result = token;
+        token = (gchar *)strtok(NULL, ".");
+    }
+    VideoExt result = V_INVALID;
+    for(guint8 i=0;i < VIDEO_EXTENSIONS_NUM; i++)
+    {
+        if(strcmp(extension_result, video_files_ext[i]) == 0)
+        {
+            result = (VideoExt)i;
         }
     }
     g_free(file_name_copy);

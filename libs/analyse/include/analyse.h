@@ -45,6 +45,7 @@ typedef struct _PitchData
     GstElement   *fft_spectrum;
     GstElement   *fakesink;
     u_int32_t     audio_frequency;
+    u_int32_t     spect_bands;
 }PitchData;
 
 typedef struct _FrequencyVolData
@@ -53,17 +54,29 @@ typedef struct _FrequencyVolData
     GstElement *audio_source;
     GstElement *audio_convert;
     GstElement *audiosink;
-    u_int32_t low_freq_start;
-    u_int32_t medium_freq_start;
-    u_int32_t high_freq_start;
+    gdouble low_freq_start;
+    gdouble medium_freq_start;
+    gdouble high_freq_start;
     u_int32_t audio_frequency;
+    u_int32_t spect_bands;
+    
 }FrequencyVolData;
 
 int analyse_init_bpm_data(BPMData *bpm_data, BPMDataAlgo bpm_algo);
 
-int analyse_init_pitch_data(PitchData *pitch_data);
+int analyse_init_pitch_data(PitchData *pitch_data, 
+                            PitchDataAlgo pitch_algo, 
+                            u_int32_t audio_frequency,
+                            u_int32_t spect_bands);
 
-float analyse_get_song_bpm(gchar * song_path);
+int analyse_init_freq_vol_data(FrequencyVolData *freq_vol_data, 
+                                gdouble low_freq_start, 
+                                gdouble medium_freq_start, 
+                                gdouble high_freq_start,
+                                u_int32_t audio_frequency,
+                                u_int32_t spect_bands);
+
+float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path);
 
 float analyse_get_song_pitch(gchar *song_path);
 

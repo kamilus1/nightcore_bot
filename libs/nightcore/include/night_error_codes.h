@@ -17,5 +17,4 @@ typedef enum _NightcoreErrorCodes
 }NightcoreErrorCodes;
 
 
-
 #endif
