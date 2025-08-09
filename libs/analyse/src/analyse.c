@@ -262,6 +262,8 @@ float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path)
             GST_MESSAGE_STATE_CHANGED | GST_MESSAGE_ERROR | GST_MESSAGE_EOS | GST_MESSAGE_TAG);
         if(msg!=NULL)
         {
+            GError *err;
+            gchar *debug_info;
             switch(GST_MESSAGE_TYPE(msg))
             {
                 case GST_MESSAGE_ERROR:
@@ -285,9 +287,19 @@ float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path)
                     gfloat bpm = g_value_get_float(val);
                     if(bpm > 0)
                     {
-                        
-                        break;
+                        if(bpm_data->algo == MEDIUM || bpm_data->algo == MEDIANA)
+                        {
+                            bpm_data->bpm_data[0] = bpm;
+                        }
+                        else if(bpm_data->algo == LAST)
+                        {
+                            bpm_data->bpm_data[0] = bpm;
+                        }
                     }
+                    break;
+                case GST_MESSAGE_EOS:
+                    g_print ("End-Of-Stream reached.\n");
+                    terminate = TRUE;
                     break;
                 default:
                     break;

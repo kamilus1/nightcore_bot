@@ -78,7 +78,8 @@ int analyse_init_freq_vol_data(FrequencyVolData *freq_vol_data,
 
 float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path);
 
-float analyse_get_song_pitch(gchar *song_path);
+
+float analyse_get_song_pitch(PitchData *pitch_data, gchar * song_path);
 
 float analyse_get_song_frequency_volume(gchar *song_path, float start_freq, float end_freq);
 

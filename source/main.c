@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     if(ai_save_data)
     {
         printf("[LOG] Saving nightcore config to: %s\n", ai_data_dir);
-
+        
     }
     switch(mode)
     {
@@ -110,4 +110,46 @@ int main(int argc, char *argv[])
     }
     free(nightcore_data);
     return 0;
+}
+
+
+void save_parameters_to_file(NightcoreData *nightcore_data, gchar *ai_data_dir, gchar * filename)
+{
+    if(ai_data_dir == NULL || filename == NULL)
+    {
+        printf("[ERR] ai_data_dir or filename is NULL\n");
+        return;
+    }
+    
+    // Ensure the directory exists
+    GError *error = NULL;
+    if (!g_file_test(ai_data_dir, G_FILE_TEST_EXISTS))
+    {
+        if (!g_mkdir_with_parents(ai_data_dir, 0755))
+        {
+            printf("[ERR] Could not create directory: %s\n", ai_data_dir);
+            return;
+        }
+    }
+    
+    // Save parameters to file
+{
+    gchar *file_path = g_strdup_printf("%s/nightcore_config.txt", ai_data_dir);
+    FILE *file = fopen(file_path, "w");
+    if (file == NULL) {
+        printf("[ERR] Could not open file for writing: %s\n", file_path);
+        g_free(file_path);
+        return;
+    }
+    
+    fprintf(file, "Bass Boost: %f\n", nightcore_data->bass_boost_val);
+    fprintf(file, "Speed: %f\n", nightcore_data->speed_val);
+    fprintf(file, "Pitch: %f\n", nightcore_data->pitch_val);
+    fprintf(file, "Reverb Delay (ms): %" G_GINT64_FORMAT "\n", nightcore_data->reverb_delay_ms);
+    fprintf(file, "Reverb Intensity: %f\n", nightcore_data->reverb_intensity);
+    fprintf(file, "Reverb Feedback: %f\n", nightcore_data->reverb_feedback);
+
+    fclose(file);
+    g_free(file_path);
+}
 }

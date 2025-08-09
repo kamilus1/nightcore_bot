@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <json-glib/json-glib.h>
+#include "data_structures.h"
+
 
 typedef enum _MusicGenre{
     NO_GENRE = 0,
@@ -15,6 +17,7 @@ typedef struct _MLNightcoreData
 {
     float origin_bpm;
     float output_bpm;
+    float input_pitch;
     float pitch;
     float output_speed;
     float input_bass;
@@ -24,7 +27,8 @@ typedef struct _MLNightcoreData
     uint32_t reverb_delay;
     float reverb_feedback;
     float reverb_value;
-
+    MusicGenre genre; /* Genre of the music */
+    char *artist; /* Artist of the music */
 }MLNightcoreData;
 
 int ml_nightcore_data_init(MLNightcoreData *ml_nightcore_data, float origin_bpm, float output_bpm, 
@@ -40,6 +44,9 @@ int ml_nightcore_data_free(MLNightcoreData *ml_nightcore_data);
 
 int ml_nightcore_data_json_to_file(MLNightcoreData *ml_nightcore_data, const char *file_path);
 
+int ml_nightcore_linear_regresion(LinearRegressionData *linear_regression_data, MLNightcoreData *ml_nightcore_data[], unsigned int n);
+
+int ml_polynomial_regression(PolyRegressionData *poly_regression_data, MLNightcoreData *ml_nightcore_data[], unsigned int n);
 
 
 #endif

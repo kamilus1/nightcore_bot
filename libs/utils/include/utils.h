@@ -42,6 +42,7 @@ typedef enum _InputExt
     I_INVALID
 }InputExt;
 
+int utils_file_valid_path(const char *file_name);
 
 float utils_float_mean(float array[], unsigned int n);
 
@@ -51,6 +52,9 @@ void utils_float_sort(float array[], unsigned int n);
 
 int utils_int_mean(int array[], unsigned int n);
 
+int utils_int_mediana(int array[], unsigned int n);
+
+void utils_int_sort(int array[], unsigned int n);
 
 AudioExt utils_get_audio_extension(const char *file_name);
 
@@ -59,6 +63,8 @@ VideoExt utils_get_video_extension(const char *file_name);
 ThumbnailExt utils_get_thumbnail_extension(const char *file_name);
 
 InputExt utils_get_input_extension(const char *file_name);
+
+
 
 
 #endif
