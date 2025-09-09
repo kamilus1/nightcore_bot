@@ -41,6 +41,17 @@ typedef struct PolyRegressionData_
     float r_squared; /*r squared value*/
 }PolyRegressionData;
 
+typedef struct LogisticRegressionData_
+{
+    VectorFloatND *x; /*x vector*/
+    VectorFloatND *y; /*y vector*/
+    float learning_rate; /*learning rate*/
+    uint32_t num_iterations; /*number of iterations*/
+    float *weights; /*weights vector*/
+    float bias; /*bias term*/
+    float cost; /*cost value*/
+}LogisticRegressionData;
+
 typedef enum NodeType_ {
     LEAF_NODE,
     INTERNAL_NODE
