@@ -10,7 +10,7 @@
 #define REVERB_DELAY_MAX_MS 500
 //aac
 static const char * audio_files_ext[] = {"mp3", "flac", "wav", "mp4", "mov", "webm"};
-static const char * video_files_ext = {"mp4", "mov"};
+static const char * video_files_ext[] = {"mp4", "mov"};
 static const char * thumbnail_files_ext[] = {"jpg", "jpeg", "png"};
 static const char * night_error_names[] = { "Success", 
                                             "Invalid input file path",
@@ -375,7 +375,8 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
                                                     gchar *output_file
                                                     )
 {
-    AudioExt input_audio_extension, output_extension;
+   
+     AudioExt input_audio_extension, output_extension;
     ThumbnailExt thumbnail_extension;
     NightcoreThumbnailPipeline nightcore_pipeline;
     GstBus *bus;
@@ -474,7 +475,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
                     nightcore_pipeline.audio_queue, 
                     nightcore_pipeline.image_src, nightcore_pipeline.image_src_dec, 
                     nightcore_pipeline.image_src_enc, nightcore_pipeline.image_freeze,
-                    nightcore_pipeline.video_queue, 
+                    nightcore_pipeline.video_queue,  nightcore_pipeline.image_convert,
                     nightcore_pipeline.muxer_mp4, nightcore_pipeline.file_sink, 
                     NULL);
     if(!gst_element_link(nightcore_pipeline.audio_src, nightcore_pipeline.audio_src_dec))
@@ -505,7 +506,12 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     
     gst_object_unref (queue_audio_pad);
     gst_object_unref (queue_video_pad);
-    if(!gst_element_link_many(nightcore_pipeline.muxer_mp4, nightcore_pipeline.image_convert ,nightcore_pipeline.file_sink))
+    if(!nightcore_pipeline.muxer_mp4)
+    {
+        DEBUG_PRINT(g_printerr("Muxer or file sink is null"))
+        return ERROR_CANT_CREATE_ALL_ELEMENTS;
+    }
+    if(!gst_element_link_many(nightcore_pipeline.muxer_mp4, nightcore_pipeline.file_sink, NULL))
     {
         DEBUG_PRINT(g_printerr("Cannot link muxer mp4 to file sink"))
         return ERROR_CANT_LINK_ALL_ELEMENTS;
@@ -679,6 +685,7 @@ static AudioExt get_audio_extension(const gchar *file_name)
 
 static VideoExt get_video_extension(const gchar *file_name)
 {
+    
     gchar *file_name_copy = g_strdup(file_name);
     gchar *token = (gchar *)strtok((char *)file_name_copy, ".");
     gchar *extension_result;
@@ -687,6 +694,7 @@ static VideoExt get_video_extension(const gchar *file_name)
         extension_result = token;
         token = (gchar *)strtok(NULL, ".");
     }
+    
     VideoExt result = V_INVALID;
     for(guint8 i=0;i < VIDEO_EXTENSIONS_NUM; i++)
     {
@@ -695,6 +703,7 @@ static VideoExt get_video_extension(const gchar *file_name)
             result = (VideoExt)i;
         }
     }
+    
     g_free(file_name_copy);
     return result;
 }
