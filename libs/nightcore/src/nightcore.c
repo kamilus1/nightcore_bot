@@ -85,6 +85,7 @@ typedef struct _NightcoreThumbnailPipeline
     GstElement *image_convert;
     GstElement *image_freeze;
     GstElement *video_queue;
+    GstElement *h264_enc;
     /**/
     GstElement *muxer_mp4;
     GstElement *file_sink;
@@ -385,6 +386,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     GstPad *mux_audio_pad, *mux_video_pad;
     GstPad *queue_audio_pad, *queue_video_pad;
     gboolean terminate = FALSE;
+    
     if(input_audio_file == NULL)
     {
         DEBUG_PRINT(g_printerr("Input "))
@@ -432,8 +434,8 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     nightcore_pipeline.audio_src_dec = gst_element_factory_make("decodebin", "source_decoder");
     nightcore_pipeline.audio_convert = gst_element_factory_make("audioconvert", "audio_converter");
     nightcore_pipeline.audio_resample = gst_element_factory_make("audioresample", "audio_resampler");
-    nightcore_pipeline.pitch = gst_element_factory_make("pitch", "nightcore_pitch");
     nightcore_pipeline.bass_boost = gst_element_factory_make("equalizer-10bands", "equalizer_bass_boost");
+    nightcore_pipeline.pitch = gst_element_factory_make("pitch", "nightcore_pitch");
     nightcore_pipeline.reverb = gst_element_factory_make("audioecho", "reverb");
     nightcore_pipeline.audio_sink_enc = gst_element_factory_make("audioconvert", "audio_enc_convert");
 
@@ -454,8 +456,16 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         nightcore_pipeline.image_src_dec = gst_element_factory_make("pngdec", "image_dec");
     }
     nightcore_pipeline.image_freeze = gst_element_factory_make("imagefreeze", "img_freezer");
+    if(output_extension == V_MOV){
+        nightcore_pipeline.muxer_mp4 = gst_element_factory_make("qtmux", "muxer");
+    }
+    else if(output_extension == V_MP4)
+    {
+        nightcore_pipeline.muxer_mp4 = gst_element_factory_make("mp4mux", "muxer");
+    }
+    
+    nightcore_pipeline.h264_enc = gst_element_factory_make("h264enc", "h264_encoder");
 
-    nightcore_pipeline.muxer_mp4 = gst_element_factory_make("qtmux", "muxer");
     nightcore_pipeline.file_sink = gst_element_factory_make("filesink", "mov_file_sink");
     if( !nightcore_pipeline.pipeline || !nightcore_pipeline.audio_src || 
         !nightcore_pipeline.audio_src_dec || !nightcore_pipeline.audio_convert || 
@@ -464,7 +474,8 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         !nightcore_pipeline.audio_queue || 
         !nightcore_pipeline.image_src || !nightcore_pipeline.image_src_dec || 
         !nightcore_pipeline.image_src_enc || !nightcore_pipeline.video_queue || !nightcore_pipeline.image_freeze ||
-        !nightcore_pipeline.muxer_mp4 || !nightcore_pipeline.file_sink || !nightcore_pipeline.image_convert)
+        !nightcore_pipeline.muxer_mp4 || !nightcore_pipeline.file_sink || !nightcore_pipeline.image_convert ||
+        !nightcore_pipeline.h264_enc)
     {
         return ERROR_CANT_CREATE_ALL_ELEMENTS;
     }
@@ -476,7 +487,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
                     nightcore_pipeline.image_src, nightcore_pipeline.image_src_dec, 
                     nightcore_pipeline.image_src_enc, nightcore_pipeline.image_freeze,
                     nightcore_pipeline.video_queue,  nightcore_pipeline.image_convert,
-                    nightcore_pipeline.muxer_mp4, nightcore_pipeline.file_sink, 
+                    nightcore_pipeline.muxer_mp4, nightcore_pipeline.file_sink, nightcore_pipeline.h264_enc, 
                     NULL);
     if(!gst_element_link(nightcore_pipeline.audio_src, nightcore_pipeline.audio_src_dec))
     {
@@ -484,7 +495,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         return ERROR_CANT_LINK_ALL_ELEMENTS;
     }
     if(!gst_element_link_many(nightcore_pipeline.audio_convert, nightcore_pipeline.audio_resample, 
-                             nightcore_pipeline.pitch, nightcore_pipeline.reverb, nightcore_pipeline.bass_boost, 
+                             nightcore_pipeline.pitch, nightcore_pipeline.bass_boost, nightcore_pipeline.reverb, 
                              nightcore_pipeline.audio_sink_enc,
                              nightcore_pipeline.audio_queue, NULL))
     {
@@ -511,7 +522,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         DEBUG_PRINT(g_printerr("Muxer or file sink is null"))
         return ERROR_CANT_CREATE_ALL_ELEMENTS;
     }
-    if(!gst_element_link_many(nightcore_pipeline.muxer_mp4, nightcore_pipeline.file_sink, NULL))
+    if(!gst_element_link_many(nightcore_pipeline.muxer_mp4, nightcore_pipeline.h264_enc, nightcore_pipeline.file_sink, NULL))
     {
         DEBUG_PRINT(g_printerr("Cannot link muxer mp4 to file sink"))
         return ERROR_CANT_LINK_ALL_ELEMENTS;
