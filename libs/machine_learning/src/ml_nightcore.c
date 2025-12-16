@@ -1,4 +1,5 @@
 #include "ml_nightcore.h"
+#include "ml.h"
 #include <json-glib/json-glib.h>
 
 int ml_nightcore_data_init(MLNightcoreData *ml_nightcore_data, float origin_bpm, float output_bpm, 

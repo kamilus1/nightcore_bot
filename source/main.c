@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
         printf("[LOG] Saving nightcore config to: %s\n", ai_data_dir);
         
     }
+    
     switch(mode)
     {
         case(MODE_FILE_TO_FILE):
@@ -90,6 +91,7 @@ int main(int argc, char *argv[])
         case(MODE_URI_TO_FILE):
             break;
         case(MODE_FILE_TO_THUMBNAIL_VIDEO):
+            
             nightcore_error = nightcore_process_file_to_thumbnail_video(nightcore_data, input_file, input_thumbnail, output_file);  
             break;  
         case(MODE_FILE_TO_SPEEDUP_VIDEO):

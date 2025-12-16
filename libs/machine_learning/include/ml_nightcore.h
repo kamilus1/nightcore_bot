@@ -44,6 +44,8 @@ int ml_nightcore_data_free(MLNightcoreData *ml_nightcore_data);
 
 int ml_nightcore_data_json_to_file(MLNightcoreData *ml_nightcore_data, const char *file_path);
 
+gchar* ml_nightcore_file_to_json(const char *file_path);
+
 int ml_nightcore_linear_regresion(LinearRegressionData *linear_regression_data, MLNightcoreData *ml_nightcore_data[], unsigned int n);
 
 int ml_polynomial_regression(PolyRegressionData *poly_regression_data, MLNightcoreData *ml_nightcore_data[], unsigned int n);

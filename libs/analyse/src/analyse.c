@@ -13,16 +13,8 @@ static void merge(float array[], int left, int mid, int right);
 
 static void merge_sort(float array[], int left, int right);
 
+static float calculate_medium(float array[], int num);
 
-
-static float calculate_medium(float array[], int num){
-    float medium = 0.0;
-    for(int i = 0; i<num;i++)
-    {
-        medium += array[i];
-    }
-    return medium;
-}
 
 static float calculate_max(float array[], int num)
 {
@@ -219,6 +211,7 @@ float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path)
     GstCaps *caps;
     GstMessage *msg;
     gboolean terminate = FALSE;
+
     if(bpm_data == NULL)
     {
         return -1.0;
@@ -312,8 +305,52 @@ float analyse_get_song_bpm(BPMData *bpm_data, gchar * song_path)
     return -1.0;
 }
 
+float analyse_get_song_pitch(PitchData *pitch_data, gchar * song_path)
+{
+    if(pitch_data == NULL)
+    {
+        return -1.0;
+    }
+    if(song_path == NULL)
+    {
+        g_printerr("Song path is NULL");
+        return -1.0;
+    }
+    switch(pitch_data->algo)
+    {
+        case(CEPSTRUM):
+            return pitch_cerpstrum(pitch_data);
+        case(AUTOCORELATION):
+            return pitch_autocorelation(pitch_data);
+        default:
+            g_printerr("Unknown pitch algorithm\n");
+            return -1.0;
+    }
+    return -1.0;
+}
+
+static u_int32_t pitch_cerpstrum(PitchData *pitch_data)
+{
+    return 0;
+}
+
+static u_int32_t pitch_autocorelation(PitchData *pitch_data)
+{
+    return 0;
+}
+
 
 static void bpm_process_data(BPMData *bpm_data, gfloat bpm_value)
 {
+    
+}
 
+
+static float calculate_medium(float array[], int num){
+    float medium = 0.0;
+    for(int i = 0; i<num;i++)
+    {
+        medium += array[i];
+    }
+    return medium;
 }

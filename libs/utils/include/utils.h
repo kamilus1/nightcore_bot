@@ -20,7 +20,7 @@ typedef enum _VideoExt
 {
     V_MP4,
     V_MOV,
-    V_INVALID
+    VIDEO_INVALID
 }VideoExt;
 
 typedef enum _ThumbnailExt
@@ -28,7 +28,7 @@ typedef enum _ThumbnailExt
     JPG,
     JPEG,
     PNG,
-    T_INVALID
+    THUMBNAIL_INVALID
 }ThumbnailExt;
 
 typedef enum _InputExt
@@ -39,7 +39,7 @@ typedef enum _InputExt
     I_MP4,
     I_MOV, 
     I_WEBM,
-    I_INVALID
+    INPUT_INVALID
 }InputExt;
 
 int utils_file_valid_path(const char *file_name);

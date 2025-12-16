@@ -163,3 +163,51 @@ AudioExt utils_get_audio_extension(const char *file_name)
     }
     return INVALID;
 }
+
+VideoExt utils_get_video_extension(const char *file_name)
+{
+    if(file_name == NULL)
+    {
+        return VIDEO_INVALID;
+    }
+    for(int i = 0; i < VIDEO_EXTENSIONS_NUM; i++)
+    {
+        if(strstr(file_name, video_files_ext[i]) != NULL)
+        {
+            return (VideoExt)i;
+        }
+    }
+    return VIDEO_INVALID;
+}
+
+ThumbnailExt utils_get_thumbnail_extension(const char *file_name)
+{
+    if(file_name == NULL)
+    {
+        return THUMBNAIL_INVALID;
+    }
+    for(int i = 0; i < THUMBNAIL_EXTENSIONS_NUM; i++)
+    {
+        if(strstr(file_name, thumbnail_files_ext[i]) != NULL)
+        {
+            return (ThumbnailExt)i;
+        }
+    }
+    return THUMBNAIL_INVALID;
+}
+
+InputExt utils_get_input_extension(const char *file_name)
+{
+    if(file_name == NULL)
+    {
+        return INPUT_INVALID;
+    }
+    for(int i = 0; i < INPUT_EXTENSIONS_NUM; i++)
+    {
+        if(strstr(file_name, input_files_ext[i]) != NULL)
+        {
+            return (InputExt)i;
+        }
+    }
+    return INPUT_INVALID;
+}
