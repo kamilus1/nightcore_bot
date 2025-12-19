@@ -378,6 +378,7 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
 {
    
      AudioExt input_audio_extension, output_extension;
+     VideoExt video_output_extension;
     ThumbnailExt thumbnail_extension;
     NightcoreThumbnailPipeline nightcore_pipeline;
     GstBus *bus;
@@ -418,8 +419,9 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
     {
         return ERROR_INVALID_INPUT_EXTENSION;
     }
-    output_extension = get_video_extension((const gchar *)output_file);
-    if(output_extension != V_MOV)
+    video_output_extension = get_video_extension((const gchar *)output_file);
+    /*TODO MP4 dont working currently*/
+    if(video_output_extension != V_MOV /*&& video_output_extension != V_MP4*/)
     {
         return ERROR_INVALID_OUTPUT_EXTENSION;
     }
@@ -456,10 +458,10 @@ NightcoreErrorCodes nightcore_process_file_to_thumbnail_video(  NightcoreData *n
         nightcore_pipeline.image_src_dec = gst_element_factory_make("pngdec", "image_dec");
     }
     nightcore_pipeline.image_freeze = gst_element_factory_make("imagefreeze", "img_freezer");
-    if(output_extension == V_MOV){
+    if(video_output_extension == V_MOV){
         nightcore_pipeline.muxer_mp4 = gst_element_factory_make("qtmux", "muxer");
     }
-    else if(output_extension == V_MP4)
+    else if(video_output_extension == V_MP4)
     {
         nightcore_pipeline.muxer_mp4 = gst_element_factory_make("mp4mux", "muxer");
     }
@@ -643,10 +645,14 @@ NightcoreErrorCodes nightcore_process_video_to_speed_up_video(  NightcoreData *n
     }
 
     output_extension = get_audio_extension(output_video_file);
-    if(output_extension == INVALID || output_extension == MP4)
+    if(output_extension == INVALID)
     {
-        DEBUG_PRINT(g_printerr("Invalid output extension"))
-        return ERROR_INVALID_OUTPUT_EXTENSION;
+        output_extension = get_audio_extension(output_video_file);
+        if(output_extension != V_MP4 && output_extension != V_MOV)
+        {
+            DEBUG_PRINT(g_printerr("Invalid output extension"))
+            return ERROR_INVALID_OUTPUT_EXTENSION;
+        }
     }
     /*Create pipeline*/
     nightcore_pipeline.pipeline = gst_pipeline_new("nightcore_pipeline");
@@ -657,7 +663,7 @@ NightcoreErrorCodes nightcore_process_video_to_speed_up_video(  NightcoreData *n
     nightcore_pipeline.audio_flac_convert = gst_element_factory_make("audioconvert", "audio_flac_converter");
     nightcore_pipeline.audio_resample = gst_element_factory_make("audioresample", "audio_resampler");
     nightcore_pipeline.pitch = gst_element_factory_make("pitch", "nightcore_pitch");
-    nightcore_pipeline.bass_boost = gst_element_factory_make("equalizer-10bands", "equalizer_bass_boost");
+    nightcore_pipeline.bass_boost = gst_element_factory_make("equalizver-10bands", "equalizer_bass_boost");
     nightcore_pipeline.reverb = gst_element_factory_make("audioecho", "reverb");
     nightcore_pipeline.audio_sink = gst_element_factory_make("filesink", "output_sink");
     gst_object_unref(bus);
